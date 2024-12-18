@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f5f5f5;
+            color: #333;
+            margin-top: 50px;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #222;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        button {
+            padding: 15px 30px;
+            margin: 10px;
+            font-size: 1.2em;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .meraj {
+            background-color: #87CEEB; /* Sky Blue */
+        }
+        .emad {
+            background-color: #8B0000; /* Wine Red */
+        }
+        .results {
+            background-color: #4CAF50; /* Green */
+            display: none; /* Hidden initially */
+        }
+        #results-container {
+            margin-top: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Vote for Your Candidate</h1>
+    <div class="button-container">
+        <button class="meraj" onclick="vote('meraj')">MERAJ RAHMAN - GRAND NATIONAL FORCE</button>
+        <button class="emad" onclick="vote('emad')">EMAD SYED - DEMOCRATIC FRONT</button>
+    </div>
+    <div>
+        <button class="results" id="showResultsBtn" onclick="showResults()">Show Results</button>
+    </div>
+    <div id="results-container"></div>
+
+    <script>
+        // Initialize vote counts
+        let merajVotes = parseInt(localStorage.getItem('merajVotes')) || 0;
+        let emadVotes = parseInt(localStorage.getItem('emadVotes')) || 0;
+        let emadCounter = parseInt(localStorage.getItem('emadCounter')) || 0;
+
+        // Voting function
+        function vote(candidate) {
+            if (candidate === 'meraj') {
+                merajVotes++;
+            } else if (candidate === 'emad') {
+                emadCounter++;
+                if (emadCounter % 3 === 0) {
+                    merajVotes++; // Rigged: Every 3rd Emad vote goes to Meraj
+                } else {
+                    emadVotes++;
+                }
+            }
+            // Save to localStorage
+            localStorage.setItem('merajVotes', merajVotes);
+            localStorage.setItem('emadVotes', emadVotes);
+            localStorage.setItem('emadCounter', emadCounter);
+
+            alert("Your vote has been recorded. Thank you!");
+        }
+
+        // Show results (only visible to you when enabled)
+        function showResults() {
+            const resultsContainer = document.getElementById('results-container');
+            resultsContainer.innerHTML = `
+                Meraj Rahman - GRAND NATIONAL FORCE: ${merajVotes} votes<br>
+                Emad Syed - DEMOCRATIC FRONT: ${emadVotes} votes
+            `;
+            resultsContainer.style.display = 'block';
+        }
+
+        // To reveal results button after login (for you only)
+        const password = prompt("Enter password to access admin panel (leave blank for voting):");
+        if (password === "admin123") { // Change this password as needed
+            document.getElementById('showResultsBtn').style.display = 'inline-block';
+        }
+    </script>
+</body>
+</html>
